@@ -1,0 +1,11 @@
+haibin\entity\Completion.class
+haibin\entity\Usage.class
+haibin\entity\Choice.class
+haibin\ChatGptClient.class
+haibin\entity\Message.class
+haibin\util\OkHttpUtils$1.class
+haibin\entity\CompletionResponse.class
+haibin\entity\Test.class
+haibin\entity\Model.class
+haibin\entity\Completion$CompletionBuilder.class
+haibin\util\OkHttpUtils.class
