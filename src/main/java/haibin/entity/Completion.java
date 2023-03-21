@@ -114,6 +114,9 @@ public class Completion {
             return this;
         }
         public CompletionBuilder message(List<Message> message){
+            if (CollectionUtil.isEmpty(this.messages)){
+                this.messages = new ArrayList<>(10);
+            }
             this.messages.addAll(message);
             return this;
         }
