@@ -2,17 +2,14 @@ package haibin;
 
 import cn.hutool.http.ContentType;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import haibin.entity.Completion;
 import haibin.entity.CompletionResponse;
-import haibin.entity.Message;
 import haibin.util.OkHttpUtils;
 import okhttp3.*;
-
+import okhttp3.sse.EventSource;
+import okhttp3.sse.EventSourceListener;
+import okhttp3.sse.EventSources;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatGptClient {
     private OkHttpClient okHttpClient;
@@ -32,6 +29,18 @@ public class ChatGptClient {
         String s = response.body().string();
         CompletionResponse completionResponse = JSON.parseObject(s, CompletionResponse.class);
         return completionResponse;
+    }
+    public void streamCompletions(Completion completion, EventSourceListener eventSourceListener){
+        if (completion.getStream()==null){
+            completion.setStream(true);
+        }
+        Request request = new Request.Builder().url("https://api.openai.com/v1/chat/completions")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer "+apiKey)
+                .post(RequestBody.create(MediaType.parse(ContentType.JSON.getValue()), JSON.toJSONString(completion)))
+                .build();
+        EventSource.Factory factory = EventSources.createFactory(okHttpClient);
+        factory.newEventSource(request,eventSourceListener);
     }
 
 }
