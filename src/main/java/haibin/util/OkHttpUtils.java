@@ -1,29 +1,16 @@
 package haibin.util;
 
-import com.alibaba.fastjson.JSON;
-import haibin.entity.Completion;
-import haibin.entity.Message;
-import haibin.entity.Model;
 import okhttp3.*;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
+import javax.net.ssl.*;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class OkHttpUtils {
     private static volatile OkHttpClient okHttpClient = null;
-
     /**
      * 初始化okHttpClient，并且允许https访问
      */
@@ -31,10 +18,6 @@ public class OkHttpUtils {
 
     }
 
-    public static void main(String[] args) {
-        Completion build = Completion.builder().model(Model.CHAT_GPT_1).message(new Message("user","测试一下")).build();
-        System.out.println(JSON.toJSONString(build));
-    }
     public static OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
             synchronized (OkHttpUtils.class) {
@@ -45,11 +28,12 @@ public class OkHttpUtils {
                             .connectTimeout(50, TimeUnit.SECONDS)
                             //写入超时时间
                             .writeTimeout(20, TimeUnit.SECONDS)
+                            .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 4780)))
                             //从连接成功到响应的总时间
                             .readTimeout(20, TimeUnit.SECONDS)
                             //跳过ssl认证(https)
                             .sslSocketFactory(createSSLSocketFactory(trustManagers), (X509TrustManager) trustManagers[0])
-                            .hostnameVerifier((hostName, session) -> true)
+                            .hostnameVerifier(new TrustAllHostnameVerifier())
                             .retryOnConnectionFailure(true)
                             //设置连接池  最大连接数量  , 持续存活的连接
                             .connectionPool(new ConnectionPool(50, 10, TimeUnit.MINUTES))
@@ -58,6 +42,12 @@ public class OkHttpUtils {
             }
         }
         return okHttpClient;
+    }
+    public static class TrustAllHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
     }
     /**
      * 生成安全套接字工厂，用于https请求的证书跳过

@@ -1,4 +1,4 @@
-package haibin.entity;
+package haibin.chatgpt;
 
 public enum Model {
     CHAT_GPT_1(1,"gpt-3.5-turbo"),

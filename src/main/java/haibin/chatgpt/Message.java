@@ -1,4 +1,4 @@
-package haibin.entity;
+package haibin.chatgpt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

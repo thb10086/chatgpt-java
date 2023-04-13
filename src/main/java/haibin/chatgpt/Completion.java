@@ -1,4 +1,4 @@
-package haibin.entity;
+package haibin.chatgpt;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;

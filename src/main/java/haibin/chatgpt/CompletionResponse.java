@@ -1,9 +1,5 @@
-package haibin.entity;
-
-import com.sun.prism.Texture;
+package haibin.chatgpt;
 import lombok.Data;
-
-import java.awt.*;
 import java.util.List;
 
 @Data

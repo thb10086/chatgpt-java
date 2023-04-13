@@ -1,24 +1,26 @@
-package haibin;
+package haibin.chatgpt;
 
 import cn.hutool.http.ContentType;
 import com.alibaba.fastjson.JSON;
-import haibin.entity.Completion;
-import haibin.entity.CompletionResponse;
+import haibin.chatgpt.Completion;
+import haibin.chatgpt.CompletionResponse;
 import haibin.util.OkHttpUtils;
 import okhttp3.*;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import okhttp3.sse.EventSources;
 import java.io.IOException;
-
-public class ChatGptClient {
+public class    ChatGptClient {
     private OkHttpClient okHttpClient;
     private  String apiKey;
     public ChatGptClient(String apiKey){
         this.apiKey=apiKey;
         okHttpClient = OkHttpUtils.getOkHttpClient();
     }
-
+    public ChatGptClient(String apiKey,OkHttpClient okHttpClient){
+        this.apiKey=apiKey;
+        this.okHttpClient = okHttpClient;
+    }
     public CompletionResponse createCompletions(Completion completion) throws IOException {
         Request request = new Request.Builder().url("https://api.openai.com/v1/chat/completions")
                 .addHeader("Content-Type", "application/json")

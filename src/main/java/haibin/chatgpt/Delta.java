@@ -1,4 +1,4 @@
-package haibin.entity;
+package haibin.chatgpt;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
